@@ -66,8 +66,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 
 //CHANGE THESSSSSSS
-var noadmin = '6283898509344'
-var nowabot = '6288226780407'
+var noadmin = '628xxx'
+var nowabot = '628xxx'
 
 // Koneksi socket io
 //socket sebagai koneksi, jdi setiap client yang connect ke socket akan dikirim sebuah pesan misal terkoneksi
@@ -87,7 +87,7 @@ io.on('connection', function(socket){
         // Cek registered on WA or not
         if (msg.body.startsWith('!cek ')){
             let number = msg.body.slice(5);
-            //number = '62838985093445';
+            //number = '628xxx5';
             number_details = await client.isRegisteredUser(number);
             if (number_details){
                 //socket.emit('logmenu', 'Nomor '+number+' terdaftar');
