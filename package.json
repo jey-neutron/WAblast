@@ -1,0 +1,28 @@
+{
+  "name": "wabot",
+  "version": "1.0.0",
+  "description": "Whatsapp Bot dengan whatsapp-web.js",
+  "main": "index.js",
+  "scripts": {
+    "wabot-tes": "nodemon index_tes.js",
+    "wabot-broadcast": "nodemon index_broadcast.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "whatsapp-api",
+    "node.js"
+  ],
+  "author": "Jey Neutron",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parser": "^3.0.0",
+    "express": "^4.18.1",
+    "http": "^0.0.1-security",
+    "node-fetch": "^2.6.7",
+    "qrcode": "^1.5.1",
+    "qrcode-terminal": "^0.12.0",
+    "request": "^2.88.2",
+    "socket.io": "^4.5.1",
+    "whatsapp-web.js": "^1.21.0"
+  }
+}
