@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WhatsApp Bot API</title>
+    <style>
+        .scroller {
+            height: 300px;
+            overflow-y: scroll;
+            scrollbar-width: thin;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+</head>
+<body>
+    <div id="app" class="container">
+        <div class="container mb-4">
+            <div class="p-3 text-center bg-body-tertiary rounded-3">
+              <h1 class="text-body-emphasis">Welcome to the WABro</h1>
+              <p class="lead">
+                <div>
+                    <button class="accordion-button d-block text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseZero" aria-expanded="false" aria-controls="collapseZero">
+                        <p class="lead">
+                            WhatsApp Bot untuk <strong>Broadcast</strong> (sementara itu aja). <code>click me</code>
+                        </p>
+                    </button>
+                    <div id="collapseZero" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <small>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Masih beta ya kak, jangan macam-macam</li>
+                                <li class="list-group-item">Tunggu sampe 'Wabot is ready' sebelum eksekusi</li>
+                                <li class="list-group-item">Pake daftar_try / coba2 dulu</li>
+                            </ul>
+                        </small>
+                        <img src="" alt="QR Code WA" id="qrcode"><br><br>
+                    </div>
+                    </div>
+                </div> <!--div collapse-->
+                Created by <code>Jey Neutron</code>.
+              </p>
+            </div>
+        </div>
+
+        <!-- Button trigger modal -->
+        <div class="gap-4 justify-content-center d-flex">
+            <button type="button" class="col-3 btn btn-success" id="start" title="Connect WABot">
+                Start WABot
+            </button>
+            <button type="button" class="col-3 btn btn-danger" id="close" title="Disconnect WABot">
+                Close WABot
+            </button>
+            <button type="button" class="col-3 btn btn-primary" data-bs-toggle="modal" data-bs-target="#fitur">
+                Launch Fitur WABro
+            </button>
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="fitur" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Fitur WABro</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!--isi modal-->
+                <div class="modal-body">
+                    <div class="input-group col-auto" role="group">
+                        <input class="form-control" type="text" placeholder="Nomor HP 628xxx" aria-label="default input example" id="nomor">
+                        <button type="button" class="btn btn-outline-info" id="ceknomor" title="Cek nomor tsb apakah ada di WA ato ga (!cek [nomor])">Cek nomor</button>
+                        <button type="button" class="btn btn-outline-danger" id="ping" title="Ping ke nomer tsb (!ping)">PING ME!!!</button>
+                    </div> <br>
+                    
+                    <label class="form-label">1. File/data nomor WA untuk eksekusi</label>
+                    <!--<a href="../wabot/daftar_try.csv" class="badge badge-secondary">Lokasi file</a>-->
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="filebroadcast" value="daftar_try.csv" id="vbtn-radio1" autocomplete="off" checked="">
+                        <label class="btn btn-outline-info" for="vbtn-radio1">daftar_try.csv</label>
+                        <input type="radio" class="btn-check" name="filebroadcast" value="daftar_final.csv" id="vbtn-radio2" autocomplete="off">
+                        <label class="btn btn-outline-info" for="vbtn-radio2">daftar_final.csv</label>
+                        <button type="button" class="btn btn-success" id="filebroadcast" title="Simpan pilihan perubahan file yang dipake">Save</button>
+                        <button type="button" class="btn btn-secondary" id="viewdata" title="View file yang dipake">View Data</button>
+                    </div> <br><br>
+
+                    <label class="form-label">2. Blast/Broadcast <br><small>*ke nomer yang ada di csv, buka di directory kalau mau ngubah (csv/img) hehe</small></label><br>
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                              <code>!blast</code>
+                            </button>
+                          </h2>
+                          <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                              Opsi 1: Ketik <code>!blast (...isi pesan...)</code> aja ya kak ke <span class="nowabot"> </span>. Nanti kaka tinggal copy isi pesan yang mau diblast trus tinggal paste deh. Ini yang simpel ga ribet, gausa buka file kodingan. <br><br>
+                                <div class="form-group">
+                                    <label for="blast">
+                                        Opsi 2: Ketik pesan yang mau diblast: <br>
+                                        <small>*</small><code>!blast</code><small> Isi pesan biasa, bisa menggunakan format WA: *bold* _italic_ ~strikethrough~ ```mono```</small><br>
+                                        <small>*</small><code>!rawblast</code><small> harus dalam raw, bisa juga menggunakan format WA.  Nama kolom liat di View data. Misalkan <br> <code>'Selamat pagi '+datarow[i]['nama']+', \nMohon maaf mengganggu'</code></small>
+                                    </label><br><br>
+                                    <div class="input-group col-auto" role="group">
+                                        <input class="form-control" type="text" placeholder="Nama-file-image.png" aria-label="default input example" id="input-img-path" disabled>
+                                        <input type="checkbox" class="btn-check" id="img-path" autocomplete="off">
+                                        <label for="img-path" class="btn btn-outline-primary">Use image</label>
+                                        <button type="button" class="btn btn-outline-secondary" id="view-img" disabled>View image</button>
+                                    </div>
+                                    <textarea class="form-control" id="blast" rows="7"></textarea><br>
+                                </div>
+                                <button type="button" id="eksekusiblast" class="btn btn-success btn-block">BLAST!</button>
+                                <button type="button" id="eksekusirawblast" class="btn btn-secondary btn-block">RAWBLAST!</button>
+                              
+                            </div>
+                          </div>
+                        </div>
+                        <div class="accordion-item">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <code>!rawblast</code>
+                            </button>
+                          </h2>
+                          <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                Opsi 1: Cukup ketik <code>!rawblast</code> aja kak ke <span class="nowabot"> </span>. Yang ini gausa isi pesan. Tapi <strong>UBAH PESANNYA DI FILE KODINGAN</strong>. Jadi harus edit di file kodingannya, yaitu di <code>index_broadcast.js</code>. Tapi bisa custom, misal mau diedit yang nerima nama dan rolenya per nomor misalnya. <br><br>
+                                Opsi 2: Klik RAWBLAST! di menu <code>!blast</code> <br>
+                            </div>
+                          </div>
+                        </div>
+                    </div><br>
+
+                    <label class="form-label">3. Nambah daftar nomor di csv ke GroupID WA
+                    <br><small>*No WABot adalah admin dan yang ngeksekusi bukan no WABot <br>*Chat <code>!cekgroupinfo</code> di group chat untuk mengetahui info group<br>*Chat <code>!addmembers</code> di group chat untuk eksekusi add members</small></label>
+                    <br>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <br>
+
+        <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="logs-tab" data-bs-toggle="tab" data-bs-target="#logstab" type="button" role="tab" aria-controls="logstab" aria-selected="true">Logs</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="view-tab" data-bs-toggle="tab" data-bs-target="#viewdata-tab" type="button" role="tab" aria-controls="viewdata-tab" aria-selected="false">View Data</button>
+            </li>
+        </ul>
+        <br>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="logstab" role="tabpanel" aria-labelledby="logs-tab">
+                <div class="row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Logs Aplikasi:
+                                <button type="button" class="btn btn-outline-warning btn-sm" id="resetlogs">Reset</button></h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="scroller">
+                                    <ul id="logs"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Logs Fitur Menu:
+                                <button type="button" class="btn btn-outline-warning btn-sm" id="reset">Reset</button></h4> 
+                            </div>
+                            <div class="card-body">
+                                <div class="scroller">
+                                    <ul id="logmenu"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!--end row logs-->
+            </div>
+
+            <div class="tab-pane fade" id="viewdata-tab" role="tabpanel" aria-labelledby="view-tab">
+                <!--view data-->
+                <div class="card">
+                    <div class="card-header" id="viewdata-header">
+                        <h4>Data</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="scroller">
+                            <table id="viewdata-table"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        
+        
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js" integrity="sha512-mHO4BJ0ELk7Pb1AzhTi3zvUeRgq3RXVOu9tTRfnA6qOxGK4pG2u57DJYolI4KrEnnLTcH9/J5wNOozRTDaybXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+    <script>
+        function getFormattedDate() {
+            var date = new Date();
+            var str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            return str;
+        }
+        /*function removeLi(button) {
+            var elem = document.getElementsByClassName("logmenu");
+            elem.parentNode.removeChild(elem);
+        }*/
+        $(document).ready(function(){
+            //var io didapat dari library di atas
+            var socket = io.connect('http://localhost:8000', 
+            { path: '/socket.io' });
+            //listen event yang telah dibuat di index.js
+            socket.on('message', function(msg){
+                //console.log(msg);
+                $('#logs').append($('<li>').text('['+getFormattedDate()+'] '+msg)); //append to class 'logs'
+            });
+            socket.on('qr', function(src){
+                $('#qrcode').attr('src',src);
+            });
+            socket.on('ready', function(src){
+                $('#qrcode').hide();
+                $('#start').prop('disabled', true);
+            });
+            socket.on('authenticated', function(src){
+                $('#qrcode').hide();
+                $('#start').prop('disabled', true);
+            });
+            socket.on('config', function(noadmin, nowabot){
+                //console.log(msg);
+                $('#nomor').prop('value', noadmin);
+                $('.nowabot').html($('<a>').addClass('badge rounded-pill text-bg-info').attr({'href':'http://wa.me/'+nowabot+'?text=!blast ','target':'_blank','title':'Open Whatsapp Web'}).text('+'+nowabot)); //.append -> .html
+            });
+
+            // Message logs fitur
+            socket.on('logmenu', function(msg, misc=""){
+                //console.log(msg);
+                $('#logmenu').append($('<li>').text('['+getFormattedDate()+'] '+msg).append($('<code>').text(misc))); //append to class 'logs'
+            });
+            // Reset
+            document.getElementById('reset').addEventListener('click', function(){
+                var element = document.getElementById('logmenu');
+                element.innerHTML = ''
+                
+            });
+            document.getElementById('resetlogs').addEventListener('click', function(){
+                var element = document.getElementById('logs');
+                element.innerHTML = ''
+                
+            });
+
+            // Start WABot
+            document.getElementById('start').addEventListener('click', function(){
+                socket.emit('init','WABot Initializing start');
+                document.getElementById('start').disabled = true;
+            });
+            // DC WAbot
+            document.getElementById('close').addEventListener('click', function(){
+                socket.emit('dc','WABot Disconnected');
+                document.getElementById('start').disabled = false;
+            });
+
+            // FITURRRRRRRRRRRRRRRRRRR
+            // Viewdata
+            document.getElementById('viewdata').addEventListener('click', function(){
+                //alert("Done, switch tab!");
+                $('#fitur').modal('hide');
+
+                $('#logs-tab').removeClass('active');
+                $('#view-tab').addClass('active');
+                $('#logstab').removeClass('active show');
+                $('#viewdata-tab').addClass('active show');
+                socket.emit('viewdata');
+                var radios = document.getElementsByName('filebroadcast');
+                for (var i = 0, length = radios.length; i < length; i++) {
+                    if (radios[i].checked) {
+                        $('#viewdata-header').html($('<h4>').text('Data ').append($('<code>').text(radios[i].value)));
+                        $('#viewdata-table').html('');
+                        break;
+                    }
+                }
+            });/*
+            socket.on('viewdatah', function(msg){
+                $('#viewdata-table').append($('<tr>'));
+            });
+            socket.on('viewdatah', function(msg){
+                //console.log(msg);
+                $('#viewdata-table').append($('<th>').text(msg));
+            });*/
+            socket.on('viewdatad', function(msg){
+                //console.log(msg);
+                $('#viewdata-table').append($('<tr>').text(msg));
+            });
+            // Cek nomor button
+            document.getElementById('ceknomor').addEventListener('click', function(){
+                var val = document.getElementById('nomor').value;
+                socket.emit('ceknomor', val);
+                //alert("Cek nomor "+val+". Liat di logs");
+                $('#fitur').modal('hide');
+            });
+            // Ping button
+            document.getElementById('ping').addEventListener('click', function(){
+                var val = document.getElementById('nomor').value;
+                alert("Otw ping nomor "+val);
+                socket.emit('ping', val);
+            });
+            // Ganti File Broadcast
+            document.getElementById('filebroadcast').addEventListener('click', function(){
+                var radios = document.getElementsByName('filebroadcast');
+                for (var i = 0, length = radios.length; i < length; i++) {
+                    if (radios[i].checked) {
+                        // do whatever you want with the checked radio
+                        //alert("Clicked "+radios[i].value);
+                        $('#fitur').modal('hide');
+                        socket.emit('gantifile', radios[i].value);
+                        // only one radio can be logically checked, don't check the rest
+                        break;
+                    }
+                }
+                //socket.emit('ping', val);
+            });
+            // Image on blast input-img-path img-path view-img
+            var elimg = document.getElementById('input-img-path')
+            document.getElementById('img-path').addEventListener('click', function(){
+                var elview = document.getElementById('view-img')
+                //var ele = (el.disabled == true) ? false : true;
+                if (elimg.disabled == true) {
+                    elimg.disabled=false;
+                    elview.disabled=false;
+                    elimg.value = 'img.jpg';
+                } else {
+                    elimg.disabled = true;
+                    elview.disabled = true;
+                    elimg.value = '';
+                }
+            });
+            document.getElementById('view-img').addEventListener('click', function(){
+                window.open('./'+elimg.value, '_blank');
+            });
+            // Blast
+            document.getElementById('eksekusiblast').addEventListener('click', function(){
+                var textblast = document.getElementById('blast')
+                if(confirm("BLAST NOT RAW: Apakah sudah pasti?")){
+                    //alert(textblast.value);
+                    $('#fitur').modal('hide');
+                    if (elimg.value != ''){
+                        socket.emit('blast', textblast.value, raw=false, imgpath = elimg.value);
+                    } else {
+                        socket.emit('blast', textblast.value, raw=false);
+                    }
+                }
+            });
+            // Rawblast
+            document.getElementById('eksekusirawblast').addEventListener('click', function(){
+                var textblast = document.getElementById('blast')
+                var pass = prompt('RAWBLAST: Password Wifi BPSBadung?');
+                if(pass == 'rahasiabps'){
+                    alert('Access granted');
+                    $('#fitur').modal('hide');
+                    if (elimg.value != ''){
+                        socket.emit('blast', textblast.value, raw=true, imgpath = elimg.value);
+                    } else {
+                        socket.emit('blast', textblast.value, raw=true);
+                    }
+                } else {
+                    alert('Sorry, wrong code');
+                }
+            });
+
+
+            /*socket.on('clicked', function() {
+                var button = document.getElementById('reset');
+                console.log('clicked');
+                removeLi(button);
+            });
+            
+            PR:
+            - VIEW masi kurang oke
+            - rahasia blm rahasia
+            */
+        });
+    </script>
+</body>
+</html>
