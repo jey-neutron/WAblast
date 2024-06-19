@@ -39,7 +39,12 @@ app.get('/', (req,res) => {
 
 // Start
 const client = new Client({
-    puppeteer: {
+    webVersionCache: {
+		remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.3000.1014192040-alpha.html',
+		type: 'remote' 
+		//type: 'none'
+	} ,
+	puppeteer: {
         args: [
             '--no-sandbox', //important
             '--disable-setuid-sandbox',
@@ -50,7 +55,7 @@ const client = new Client({
             '--single-process',
             '--disable-gpu',
         ],
-        headless: true
+        headless: true //false
     }, 
     //session:sessionCfg
     authStrategy: new LocalAuth()
